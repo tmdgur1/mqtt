@@ -3,7 +3,7 @@ using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
-namespace MQTT_Example
+namespace MQTT_PUB
 {
     class Program
     {
@@ -12,7 +12,7 @@ namespace MQTT_Example
             string[] topics = new string[] { "Client" };
             byte[] qos_type = new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE };
             string broker_host = "localhost";
-            string client_id = "Client2";
+            string client_id = "Client";
             MqttProtocolVersion version = MqttProtocolVersion.Version_3_1;
 
 
@@ -33,8 +33,15 @@ namespace MQTT_Example
                 client.ConnectionClosed += Client_ConnectionClosed;
 
                 client.Connect(client_id);
-                client.Subscribe(topics, qos_type);
-            } catch(Exception e)
+
+                while (true) 
+                {
+                    Console.Write("insert string: ");
+                    string str = Console.ReadLine();
+                    client.Publish("Client", Encoding.UTF8.GetBytes(str), MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, true);
+                }
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
